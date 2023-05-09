@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.1/full/pyodide.js"></script>
+
+    <!-- Responsivivdade -->
+    <style>
+        .textinput {
+            float: left;
+            width: 100%;
+            min-height: 75px;
+            outline: none;
+            resize: none;
+            border: 1px solid grey;
+        }
+        .responsive {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+    
+    <!-- Responsivivdade -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>Grama Molhada</title>
+    
+    <meta name="apple-mobile-web-app-status-bar" content="#aa7700">
+    <meta name="theme-color" content="black">
+    
+    <!-- Manifest.json -->
+    <link rel="manifest" href="manifest.json">
+  </head>
+
+  <body>
+    <h1>Grama Molhada v0.1</h1>
+    <img src="grama_molhada.png" alt="Rede bayesiana" class="responsive">
+    <br />
+    <h3>Pergunte-me </h3>
+    Exemplos: <br />
+    <i>
+    P(chuva)<br />
+    P(Alarm, {Burglary: T, Earthquake: F})<br />
+    Alarm.cpt<br />
+    P(Alarm, {Burglary: F, Earthquake: F})<br />
+    P_xi_given_parents(Alarm, (F, F, F, F, F), alarm_net)<br />
+    joint_distribution(alarm_net)<br />
+    joint_distribution(alarm_net)[F, F, T, T, T]<br />
+    enumeration_ask(Burglary, {JohnCalls: F, MaryCalls: T}, alarm_net)<br />
+    enumeration_ask(Alarm, {MaryCalls: T, Earthquake: T}, alarm_net)
+    </i>
+    <br /><br />
+    <textarea class="textinput" id="code" rows="3" cols="80"></textarea>
+    <button onclick="evaluatePython()">Perguntar</button>
+    <br /><br />
+    <table id="table" border="1" cellpadding="10px">
+      <th>Pergunta</th>
+      <th>Resposta</th>
+    </table>
+    <br />
+
+    <script>
+      const code = document.getElementById("code");
+
+      // Preencher a tabela de resultados
+      function addToOutput(s) {
+        let tr = table.insertRow(-1);
+        let td = tr.insertCell(-1);
+        td.innerHTML = code.value;
+        td = tr.insertCell(-1);
+        td.innerHTML = s;
+      }
+
+      // Pyodide - Init
+      async function main() {
+        let pyodide = await loadPyodide();
+        code.value += "prontinho!";
+        return pyodide;
+      }
+      let pyodideReadyPromise = main();
+
+      // Pyodide - carregar arquivos e executar chamada
+      async function evaluatePython() {
+        let pyodide = await pyodideReadyPromise;
+        try {
+          let python_code = (await (await fetch('bayesian_grama.py')).text());
+          pyodide.runPython(python_code);
+          let output = pyodide.runPython(code.value);
+          addToOutput(output);
+        } catch (err) {
+          addToOutput(err);
+        }
+      }
+    </script>
+
+    <!-- PWA -->
+    <script>
+        window.addEventListener('load', () => {
+            registerSW();
+        });
+
+        // Registro do Service Worker
+        async function registerSW() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    await navigator
+                            .serviceWorker
+                            .register('serviceworker.js');
+                }
+                catch (e) {
+                    console.log('SW registration failed');
+                }
+            }
+        }
+    </script>
+
+  </body>
+</html>
