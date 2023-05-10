@@ -34,21 +34,16 @@
   </head>
 
   <body>
-    <h1>Grama Molhada v0.1</h1>
+    <h1>Grama Molhada?</h1>
     <img src="grama_molhada.png" alt="Rede bayesiana" class="responsive">
     <br />
     <h3>Pergunte-me </h3>
     Exemplos: <br />
     <i>
     P(chuva)<br />
-    P(Alarm, {Burglary: T, Earthquake: F})<br />
-    Alarm.cpt<br />
-    P(Alarm, {Burglary: F, Earthquake: F})<br />
-    P_xi_given_parents(Alarm, (F, F, F, F, F), alarm_net)<br />
-    joint_distribution(alarm_net)<br />
-    joint_distribution(alarm_net)[F, F, T, T, T]<br />
-    enumeration_ask(Burglary, {JohnCalls: F, MaryCalls: T}, alarm_net)<br />
-    enumeration_ask(Alarm, {MaryCalls: T, Earthquake: T}, alarm_net)
+    joint_distribution(grama_net)<br />
+    tomar_decisão(utilidade_esperada_Ndesligar, utilidade_esperada_desligar)<br />
+    tomar_decisão(utilidade_esperada_Ndesligar_grama, utilidade_esperada_desligar_grama)<br />
     </i>
     <br /><br />
     <textarea class="textinput" id="code" rows="3" cols="80"></textarea>
@@ -56,7 +51,7 @@
     <br /><br />
     <table id="table" border="1" cellpadding="10px">
       <th>Pergunta</th>
-      <th>Resposta</th>
+      <th>Decisão tomada</th>
     </table>
     <br />
 
