@@ -77,8 +77,6 @@ class Bool(int):
 T = Bool(True)
 F = Bool(False)
 
-
-
 """### Funções associadas:"""
 
 
@@ -160,8 +158,8 @@ def matches_evidence(row, evidence, net):
                for v in evidence)
 
 
-
 """# Exemplo do Alarme"""
+
 
 # CPTable({(T, T): .99,
 #             (T, F): .8,
@@ -172,114 +170,48 @@ def matches_evidence(row, evidence, net):
 ##Ação  - desligar o regador
 ##utilidade -
 
-#Custo_regador = 1
+# Custo_regador = 1
 
 
-def tomar_decisão(Ndesligar,desligar):
-    t=(Ndesligar,desligar)
-    if t.index(max(t))==0:
-        return("Nao desligar regador")
+def tomar_decisão(Ndesligar, desligar):
+    t = (Ndesligar, desligar)
+    if t.index(max(t)) == 0:
+        return ("Nao desligar regador")
     else:
-        return("desligar regador")
+        return ("Desligar regador")
 
 
+U_desligar_chuva = 9
+U_desligar_Nchuva = 1
 
-U_desligar_chuva=9
-U_desligar_Nchuva=1
-
-U_Ndesligar_chuva=3
-U_Ndesligar_Nchuva=10
-
+U_Ndesligar_chuva = 3
+U_Ndesligar_Nchuva = 10
 
 grama_net = (BayesNet()
-             .add('chuva', [], 0.2)
-             .add('regador',[],0.4)
+             .add('chuva', [], 0.8)
+             .add('regador', [], 0.4)
              .add('grama', ['chuva', 'regador'], {(T, T): 0.99, (T, F): 0.8, (F, T): 0.9, (F, F): 0.0})
-             
-             )
 
+             )
 
 # Tornar variáveis globais
 globals().update(grama_net.lookup)
 
-# """# Exemplos de uso das classes e funções"""
 
 
-print("-------------")
-print(joint_distribution(grama_net))
-print("-------------")
-print(P(regador)[F])
-print("-------------")
-print(P(chuva)[F])
-print("-------------")
-print(P(chuva)[T])
-#
-print("-------------")
-## # Amostragem aleatória:
-print(sample(P(chuva)))
-print("-------------")
-#
-## # 100 mil amostragens:
-print(Counter(sample(P(chuva)) for i in range(100000)))
-print("-------------")
-# # Duas maneiras equivalentes de se especificar a mesma distribuição booleana:
-assert ProbDist(0.75) == ProbDist({T: 0.75, F: 0.25})
-print(ProbDist(0.7))
-print("-------------")
-
-# # # Duas maneiras equivalentes de se especificar a mesma distribuição NÃO booleana:
-assert ProbDist(win=15, lose=3, tie=2) == ProbDist({'win': 15, 'lose': 3, 'tie': 2})
-print(ProbDist(win=15, lose=3, tie=2))
-print("-------------")
-
-# # A diferença entre um Factor e uma ProbDist -- a ProbDist é normalizada:
-print(Factor(a=1, b=2, c=3, d=4))
-print("-------------")
-
-print(ProbDist(x=1, y=2, z=3, k=4))
-print("-------------")
+utilidade_esperada_desligar = ((U_desligar_chuva - 1) * P(chuva)[T]) + ((U_desligar_Nchuva - 1) * P(chuva)[F])
+utilidade_esperada_Ndesligar = ((U_Ndesligar_chuva - 1) * P(chuva)[T]) + ((U_Ndesligar_Nchuva - 1) * P(chuva)[F])
 
 
 
+p_grama = (P(chuva)[T] * P(grama, {chuva: T, regador: T})[T]) + (P(grama, {chuva: F, regador: T})[F] * P(chuva)[F])
+p_chuva_grama = (P(grama, {chuva: T, regador: T})[T]) * (P(chuva)[T] / p_grama)
+
+p_chuva_grama = (P(grama, {chuva: T, regador: T})[T]) * (P(chuva)[T] / p_grama)
 
 
-utilidade_esperada_desligar=((U_desligar_chuva-1)*P(chuva)[T])+((U_desligar_Nchuva-1)*P(chuva)[F])
-utilidade_esperada_Ndesligar=((U_Ndesligar_chuva-1)*P(chuva)[T])+((U_Ndesligar_Nchuva-1)*P(chuva)[F])
-
-
-
-
-
-
-
-print("-------------")
-print("-------------")
-print(utilidade_esperada_desligar)
-print("-------------")
-print(utilidade_esperada_Ndesligar)
-print("-------------")
-print("-------------")
-print(tomar_decisão(utilidade_esperada_Ndesligar,utilidade_esperada_desligar))
-print("-------------")
-
-print(P(grama,{chuva: T, regador: T}))
-print(P(grama,{chuva: F, regador: T}))
-p_grama=(P(chuva)[T]*P(grama,{chuva: T, regador: T})[T])+(P(grama,{chuva: F, regador: T})[F]*P(chuva)[F])
-p_chuva_grama=(P(grama,{chuva: T, regador: T})[T])*(P(chuva)[T]/p_grama)
-
-p_chuva_grama=(P(grama,{chuva: T, regador: T})[T])*(P(chuva)[T]/p_grama)
-
-print("-------------")
-utilidade_esperada_desligar_grama=((U_desligar_chuva-1)*P(chuva)[T])+((U_desligar_Nchuva-1)*p_chuva_grama)
-utilidade_esperada_Ndesligar_grama=((U_Ndesligar_chuva-1)*P(chuva)[T])+((U_Ndesligar_Nchuva-1)*p_chuva_grama)
-print("-------------")
-print(utilidade_esperada_desligar_grama)
-print("-------------")
-print(utilidade_esperada_Ndesligar_grama)
-print("-------------")
-print("-------------")
-print(tomar_decisão(utilidade_esperada_Ndesligar_grama,utilidade_esperada_desligar_grama))
-
+utilidade_esperada_desligar_grama = ((U_desligar_chuva - 1) * P(chuva)[T]) + ((U_desligar_Nchuva - 1) * p_chuva_grama)
+utilidade_esperada_Ndesligar_grama = ((U_Ndesligar_chuva - 1) * P(chuva)[T]) + ((U_Ndesligar_Nchuva - 1) * p_chuva_grama)
 
 
 
