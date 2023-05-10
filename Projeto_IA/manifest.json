@@ -1,22 +1,12 @@
 {
-	"name":"Alarme inteligente PWA",
-	"short_name":"Alarmi",
+	"name":"Grama molhada PWA",
+	"short_name":"gramamolhar",
 	"start_url":"index.html",
 	"display":"standalone",
 	"background_color":"#5900b3",
 	"theme_color":"black",
 	"scope": ".",
-	"description":"Exemplo de uso Pyodide e PWA",
-	"icons":[
-	{
-        "src":"alarm.png",
-        "sizes":"160x160",
-        "type":"image/png"
-	},
-	{
-        "src":"alarm.png",
-        "sizes":"160x160",
-        "type":"image/png"
-	}
-    ]
+	"description":"Exemplo de uso Pyodide e PWA"
+
+    
 }
